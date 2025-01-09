@@ -1,6 +1,7 @@
 // Get data from USGS GeoJson feed
-// Calling on the endpoint that returns all earthquake data from the past dayd
-const endpoint = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php"
+// Calling on the endpoint that returns all earthquake data from the past seven days
+const weeklyEndpoint = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
+const dailyEndpoint = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson"
 
 
 // create map object
@@ -18,3 +19,27 @@ var tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 
 
 
+
+d3.json(dailyEndpoint).then(function(response) {
+    // console.log(response.features);
+
+    let features = response.features;
+
+
+    for (i = 0; i < features.length; i++) {
+        let coordinates = features[i].geometry.coordinates.slice(0,2).reverse();
+        console.log(coordinates);
+        let depth = features[i].geometry.coordinates[2];
+        let magnitude = features[i].properties.mag;
+        let place = features[i].properties.place;
+
+
+        L.marker(coordinates).addTo(map).bindPopup(`Magnitude: ${magnitude}`); 
+            //https://leafletjs.com/index.html
+
+
+
+
+    };
+
+});
