@@ -56,10 +56,6 @@ d3.json(weeklyEndpoint).then(function(response) {
         let magnitude = features[i].properties.mag;
         let place = features[i].properties.place;
 
-
-        // L.marker(coordinates).addTo(map).bindPopup(`Magnitude: ${magnitude}`); 
-        //     //https://leafletjs.com/index.html
-
         L.circle(coordinates, {
             color: "black",
             fillColor: depthToColor(depth),
