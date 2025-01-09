@@ -19,27 +19,59 @@ var tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 
 
 
+// function to convert depth value from geoJSON into color code to suply to Leaflet marker builder
+function depthToColor (depth) {
+    let color = "";
 
-d3.json(dailyEndpoint).then(function(response) {
+    if (depth < 10) {
+        color = "#22fc00"
+    } else if (depth > 10 && depth < 30) {
+        color = "#9bfe23"
+    } else if (depth > 30 && depth < 50) {
+        color = "#fefe2b"
+    } else if (depth > 50 && depth < 70) {
+        color = "#fece2b"
+    } else if (depth > 70 && depth < 90) {
+        color = "#fe913c"
+    } else if (depth > 90){
+        color = "#ff0303"
+    } else {
+        color = "#22fc00"
+    };
+
+    return color;
+};
+
+
+
+
+d3.json(weeklyEndpoint).then(function(response) {
     // console.log(response.features);
 
     let features = response.features;
 
-
     for (i = 0; i < features.length; i++) {
         let coordinates = features[i].geometry.coordinates.slice(0,2).reverse();
-        console.log(coordinates);
         let depth = features[i].geometry.coordinates[2];
         let magnitude = features[i].properties.mag;
         let place = features[i].properties.place;
 
 
-        L.marker(coordinates).addTo(map).bindPopup(`Magnitude: ${magnitude}`); 
-            //https://leafletjs.com/index.html
+        // L.marker(coordinates).addTo(map).bindPopup(`Magnitude: ${magnitude}`); 
+        //     //https://leafletjs.com/index.html
 
-
+        L.circle(coordinates, {
+            color: "black",
+            fillColor: depthToColor(depth),
+            fillOpacity: 0.9,
+            radius: magnitude * 10000
+        }).addTo(map);
 
 
     };
 
 });
+
+
+
+
