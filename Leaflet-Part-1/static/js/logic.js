@@ -44,7 +44,6 @@ function depthToColor (depth) {
 
 
 
-
 d3.json(weeklyEndpoint).then(function(response) {
     // console.log(response.features);
 
@@ -62,12 +61,12 @@ d3.json(weeklyEndpoint).then(function(response) {
             fillOpacity: 0.9,
             radius: magnitude * 10000
         }).addTo(map).bindPopup(`Location: ${place}</b><br>Magnitude: ${magnitude}`);//https://leafletjs.com/examples/quick-start/
-
-
     };
-
 });
 
+
+// potential legend plugin: https://github.com/ptma/Leaflet.Legend
+// potential source for basemap option control: https://github.com/consbio/Leaflet.Basemaps
 
 
 
