@@ -53,7 +53,7 @@ d3.json(weeklyEndpoint).then(function(response) {
             color: "black",
             fillColor: depthToColor(depth),
             fillOpacity: 0.9,
-            radius: magnitude * 10000
+            radius: magnitude * 15000
         }).addTo(map).bindPopup(`Location: ${place}</b><br>Magnitude: ${magnitude}</b><br>Depth: ${depth}m`); //(2)
     };
 });
