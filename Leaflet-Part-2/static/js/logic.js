@@ -1,22 +1,13 @@
-// Get data from USGS GeoJson feed
-// Calling on the endpoint that returns all earthquake data from the past seven days
+// USGS earquake data endpoints.
 const weeklyEndpoint = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 const dailyEndpoint = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson"
 
+//Create Leaflet geoJSON object using data stored in local boundaries.js file.
+//This object will later be used as a map layer
+const faultLines = L.geoJSON(geoJSON); //https://leafletjs.com/examples/geojson/
 
-// create map object
-var map = L.map("map",{
-    center: [39.7392, -104.9903], //using coordinates of Denver, Colorado as map center on page load
-    zoom: 5 
-}); // (1)
-
-//create tile layer and assign it to map object
-var tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map); // (1)
-
-
-// function to convert depth value from geoJSON into color code to suply to Leaflet marker builder
+// function that outputs a hex color code based on integer input.
+// This function is used when creating earthquake markers inside of createQuakesLayerGroup().
 function depthToColor (depth) {
     let color = "";
 
@@ -39,24 +30,101 @@ function depthToColor (depth) {
     return color;
 };
 
-d3.json(weeklyEndpoint).then(function(response) {
 
-    let features = response.features;
+// This function makes a call to a USGS endpoint, and compiles the returned geoJSON data into a Leaflet layer group.
+function createQuakesLayerGroup() {
 
-    for (i = 0; i < features.length; i++) {
-        let coordinates = features[i].geometry.coordinates.slice(0,2).reverse();
-        let depth = features[i].geometry.coordinates[2];
-        let magnitude = features[i].properties.mag;
-        let place = features[i].properties.place;
+    // initialize Leaflet layer group
+    var earthquakeLayer = new L.layerGroup(); //Module 15; Lesson 3; Activity 2; logic.js
 
-        L.circle(coordinates, {
-            color: "black",
-            fillColor: depthToColor(depth),
-            fillOpacity: 0.9,
-            radius: magnitude * 15000
-        }).addTo(map).bindPopup(`Location: ${place}</b><br>Magnitude: ${magnitude}</b><br>Depth: ${depth}m`); //(2)
-    };
-});
+    // Make call to USGS endpoint, store promise for later parsing.
+    const quakesPromise = fetch(weeklyEndpoint); //https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Async_JS/Promises
+
+    //pass data promise into .then() method to check response status. 
+    // If there are no status issues, the response is converted into a json object.
+    quakesPromise
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        }
+        return response.json();
+    })//https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Async_JS/Promises
+    //the json object is 
+    .then((data) => {
+        //isolate desired earthquake data in features element of json object
+        let features = data.features;
+        
+        //iterate over features dictionary to examine each earthquake record in response data
+        for (i=0; i < features.length; i++) {
+            let coordinates = features[i].geometry.coordinates.slice(0,2).reverse();
+            let depth = features[i].geometry.coordinates[2];
+            let magnitude = features[i].properties.mag;
+            let place = features[i].properties.place;
+
+            // Create Leaflet circle marker object, using coord, depth, mag, and place.
+            // Bind a popup to the circle object, using the same datapoints.
+            let marker = L.circle(coordinates, {
+                color: "black",
+                fillColor: depthToColor(depth),
+                fillOpacity: 0.9,
+                radius: magnitude * 15000
+                }).bindPopup(`Location: ${place}</b><br>Magnitude: ${magnitude}</b><br>Depth: ${depth}m`);
+            
+            //add the circle marker to the earquakeLayer layer group object.
+            marker.addTo(earthquakeLayer); //Module 15; Lesson 3; Activity 2; logic.js
+        };
+    })
+    //log error if 
+    .catch((error)=> {
+        console.error(`Could not get data: ${error}`);
+    });//https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Async_JS/Promises
+
+    //return layer group 
+    return earthquakeLayer;
+};
+
+
+//Store populated layer group in variable.
+//quakes will be used below in layer controls. 
+const quakes = createQuakesLayerGroup();
+
+
+
+
+// //create street tile layer
+var street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}); // (1)
+
+// //create topo tile layer
+var topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+	attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+}); // (1)
+
+
+// base maps reference for layer control
+let baseMaps = {
+    Street: street,
+    Topography: topo
+  };//https://leafletjs.com/examples/layers-control/
+  
+// map overlays reference for layer control
+let overlayMaps = {
+    Earthquakes: quakes,
+    Faultlines: faultLines
+};//https://leafletjs.com/examples/layers-control/
+  
+
+// create map object, using 'topo' tile layer and 'faultLines' geoJSON as default
+var map = L.map("map",{
+    center: [39.7392, -104.9903], //using coordinates of Denver, Colorado as map center on page load
+    zoom: 4,
+    layers: [topo, quakes, faultLines] //showing topo map, and both earthquakes and faultlines on page load
+}); // (1)
+
+
+//Initialize layer control
+L.control.layers(baseMaps, overlayMaps, {collapsed: false}).addTo(map);//https://leafletjs.com/examples/layers-control/
 
 
 // add legend to map using Leaflet.legend plug-in
@@ -99,12 +167,4 @@ const legend = L.control.Legend({
         fillColor: "#ff0303",
         weight: 1 
     }]
-}).addTo(map); //(3)
-
-
-
-
-// potential source for basemap option control: https://github.com/consbio/Leaflet.Basemaps
-
-
-
+}).addTo(map); //https://github.com/ptma/Leaflet.Legend
