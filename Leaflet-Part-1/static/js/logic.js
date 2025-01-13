@@ -60,9 +60,12 @@ d3.json(weeklyEndpoint).then(function(response) {
             fillColor: depthToColor(depth),
             fillOpacity: 0.9,
             radius: magnitude * 10000
-        }).addTo(map).bindPopup(`Location: ${place}</b><br>Magnitude: ${magnitude}`);//https://leafletjs.com/examples/quick-start/
+        }).addTo(map).bindPopup(`Location: ${place}</b><br>Magnitude: ${magnitude}</b><br>Depth: ${depth}m`);//https://leafletjs.com/examples/quick-start/
     };
 });
+
+
+
 
 
 // potential legend plugin: https://github.com/ptma/Leaflet.Legend
