@@ -71,31 +71,6 @@ const quakes = createQuakesLayerGroup();
 
 
 
-// function showQuakes(){
-//     d3.json(weeklyEndpoint).then(function(response) {
-
-//             let features = response.features;
-    
-//             for (i = 0; i < features.length; i++) {
-//                 let coordinates = features[i].geometry.coordinates.slice(0,2).reverse();
-//                 let depth = features[i].geometry.coordinates[2];
-//                 let magnitude = features[i].properties.mag;
-//                 let place = features[i].properties.place;
-    
-//                 L.circle(coordinates, {
-//                     color: "black",
-//                     fillColor: depthToColor(depth),
-//                     fillOpacity: 0.9,
-//                     radius: magnitude * 15000
-//                 }).addTo(map).bindPopup(`Location: ${place}</b><br>Magnitude: ${magnitude}</b><br>Depth: ${depth}m`); //(2)
-//             };
-//     });
-// };
-
-
-
-
-
 
 // //create tile layer and assign it to map object
 var street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -130,3 +105,46 @@ var map = L.map("map",{
 
 
 L.control.layers(baseMaps, overlayMaps, {collapsed: false}).addTo(map);
+
+
+// add legend to map using Leaflet.legend plug-in
+const legend = L.control.Legend({
+    position: "bottomleft",
+    title: "Depth (meters)",
+    collapsed: false,
+    symbolWidth: 30,
+    symbolHeight: 48,
+    opacity: 1,
+    column: 1,
+    legends: [{
+        label: "-10m - 10m",
+        type: "rectangle",
+        fillColor: "#22fc00",
+        weight: 1
+    },{
+        label: "10m - 30m",
+        type: "rectangle",
+        fillColor: "#9bfe23",
+        weight: 1  
+    },{
+        label: "30m - 50m",
+        type: "rectangle",
+        fillColor: "#fefe2b",
+        weight: 1  
+    },{
+        label: "50m - 70m",
+        type: "rectangle",
+        fillColor: "#fece2b",
+        weight: 1 
+    },{
+        label: "70m - 90m",
+        type: "rectangle",
+        fillColor: "#fe913c",
+        weight: 1 
+    },{
+        label: "+90m",
+        type: "rectangle",
+        fillColor: "#ff0303",
+        weight: 1 
+    }]
+}).addTo(map); //(3)

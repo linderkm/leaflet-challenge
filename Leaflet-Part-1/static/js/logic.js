@@ -104,7 +104,4 @@ const legend = L.control.Legend({
 
 
 
-// potential source for basemap option control: https://github.com/consbio/Leaflet.Basemaps
-
-
 
