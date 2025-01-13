@@ -68,14 +68,21 @@ d3.json(weeklyEndpoint).then(function(response) {
 // add legend to map using Leaflet.legend plug-in
 const legend = L.control.Legend({
     position: "bottomleft",
+    title: "Depth",
     collapsed: false,
-    symbolWidth: 20,
+    symbolWidth: 24,
+    symbolHeight: 48,
     opacity: 1,
     column: 1,
     legends: [{
         label: "-10m - 10m",
         type: "rectangle",
-        color: "22fc00"
+        fillColor: "#22fc00",
+        weight: 5
+    },{
+        label: "10m - 30m",
+        type: "rectangle",
+        fillColor: "#9bfe23"  
     }]
 }).addTo(map);
 
