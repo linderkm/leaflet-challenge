@@ -70,7 +70,7 @@ const legend = L.control.Legend({
     position: "bottomleft",
     title: "Depth",
     collapsed: false,
-    symbolWidth: 24,
+    symbolWidth: 30,
     symbolHeight: 48,
     opacity: 1,
     column: 1,
@@ -83,13 +83,29 @@ const legend = L.control.Legend({
         label: "10m - 30m",
         type: "rectangle",
         fillColor: "#9bfe23"  
+    },{
+        label: "30m - 50m",
+        type: "rectangle",
+        fillColor: "#fefe2b"  
+    },{
+        label: "50m - 70m",
+        type: "rectangle",
+        fillColor: "#fece2b" 
+    },{
+        label: "70m - 90m",
+        type: "rectangle",
+        fillColor: "#fe913c" 
+    },{
+        label: "+90m",
+        type: "rectangle",
+        fillColor: "#ff0303" 
     }]
-}).addTo(map);
+}).addTo(map); //https://github.com/ptma/Leaflet.Legend
 
 
 
 
-// potential legend plugin: https://github.com/ptma/Leaflet.Legend
+
 // potential source for basemap option control: https://github.com/consbio/Leaflet.Basemaps
 
 
