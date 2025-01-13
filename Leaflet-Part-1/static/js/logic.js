@@ -6,7 +6,7 @@ const dailyEndpoint = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary
 
 // create map object
 var map = L.map("map",{
-    center: [40.7608, -111.8910], //using coordinates of Salt Lake City, Utah as map center on page load
+    center: [39.7392, -104.9903], //using coordinates of Denver, Colorado as map center on page load
     zoom: 5 
 }); // Module 15; Lesson 1; Activity 1; logic.js
 
@@ -14,9 +14,6 @@ var map = L.map("map",{
 var tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map); // Module 15; Lesson 1; Activity 1; logic.js
-
-
-
 
 
 // function to convert depth value from geoJSON into color code to suply to Leaflet marker builder
@@ -42,8 +39,6 @@ function depthToColor (depth) {
     return color;
 };
 
-
-
 d3.json(weeklyEndpoint).then(function(response) {
     // console.log(response.features);
 
@@ -68,7 +63,7 @@ d3.json(weeklyEndpoint).then(function(response) {
 // add legend to map using Leaflet.legend plug-in
 const legend = L.control.Legend({
     position: "bottomleft",
-    title: "Depth",
+    title: "Depth (meters)",
     collapsed: false,
     symbolWidth: 30,
     symbolHeight: 48,
@@ -78,30 +73,34 @@ const legend = L.control.Legend({
         label: "-10m - 10m",
         type: "rectangle",
         fillColor: "#22fc00",
-        weight: 5
+        weight: 1
     },{
         label: "10m - 30m",
         type: "rectangle",
-        fillColor: "#9bfe23"  
+        fillColor: "#9bfe23",
+        weight: 1  
     },{
         label: "30m - 50m",
         type: "rectangle",
-        fillColor: "#fefe2b"  
+        fillColor: "#fefe2b",
+        weight: 1  
     },{
         label: "50m - 70m",
         type: "rectangle",
-        fillColor: "#fece2b" 
+        fillColor: "#fece2b",
+        weight: 1 
     },{
         label: "70m - 90m",
         type: "rectangle",
-        fillColor: "#fe913c" 
+        fillColor: "#fe913c",
+        weight: 1 
     },{
         label: "+90m",
         type: "rectangle",
-        fillColor: "#ff0303" 
+        fillColor: "#ff0303",
+        weight: 1 
     }]
 }).addTo(map); //https://github.com/ptma/Leaflet.Legend
-
 
 
 
