@@ -4,7 +4,7 @@ const dailyEndpoint = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary
 
 //Create Leaflet geoJSON object using data stored in local boundaries.js file.
 //This object will later be used as a map layer
-const faultLines = L.geoJSON(geoJSON); //https://leafletjs.com/examples/geojson/
+const faultLines = L.geoJSON(geoJSON); //(2)
 
 // function that outputs a hex color code based on integer input.
 // This function is used when creating earthquake markers inside of createQuakesLayerGroup().
@@ -35,10 +35,10 @@ function depthToColor (depth) {
 function createQuakesLayerGroup() {
 
     // initialize Leaflet layer group
-    var earthquakeLayer = new L.layerGroup(); //Module 15; Lesson 3; Activity 2; logic.js
+    var earthquakeLayer = new L.layerGroup(); //(2)
 
     // Make call to USGS endpoint, store promise for later parsing.
-    const quakesPromise = fetch(weeklyEndpoint); //https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Async_JS/Promises
+    const quakesPromise = fetch(weeklyEndpoint); //(3)
 
     //pass data promise into .then() method to check response status. 
     // If there are no status issues, the response is converted into a json object.
@@ -48,7 +48,7 @@ function createQuakesLayerGroup() {
             throw new Error(`HTTP error: ${response.status}`);
         }
         return response.json();
-    })//https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Async_JS/Promises
+    })//(3)
     //the json object is 
     .then((data) => {
         //isolate desired earthquake data in features element of json object
@@ -68,16 +68,16 @@ function createQuakesLayerGroup() {
                 fillColor: depthToColor(depth),
                 fillOpacity: 0.9,
                 radius: magnitude * 15000
-                }).bindPopup(`Location: ${place}</b><br>Magnitude: ${magnitude}</b><br>Depth: ${depth}m`);
+                }).bindPopup(`Location: ${place}</b><br>Magnitude: ${magnitude}</b><br>Depth: ${depth}m`);//(4)
             
             //add the circle marker to the earquakeLayer layer group object.
-            marker.addTo(earthquakeLayer); //Module 15; Lesson 3; Activity 2; logic.js
+            marker.addTo(earthquakeLayer); //(2)
         };
     })
     //log error if 
     .catch((error)=> {
         console.error(`Could not get data: ${error}`);
-    });//https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Async_JS/Promises
+    });//(3)
 
     //return layer group 
     return earthquakeLayer;
@@ -89,42 +89,40 @@ function createQuakesLayerGroup() {
 const quakes = createQuakesLayerGroup();
 
 
-
-
 // //create street tile layer
 var street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}); // (1)
+}); // (5)
 
 // //create topo tile layer
 var topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
 	attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
-}); // (1)
+}); // (5)
 
 
 // base maps reference for layer control
 let baseMaps = {
     Street: street,
     Topography: topo
-  };//https://leafletjs.com/examples/layers-control/
+  };//(6)
   
 // map overlays reference for layer control
 let overlayMaps = {
     Earthquakes: quakes,
     Faultlines: faultLines
-};//https://leafletjs.com/examples/layers-control/
+};//(6)
   
 
 // create map object, using 'topo' tile layer and 'faultLines' geoJSON as default
 var map = L.map("map",{
-    center: [39.7392, -104.9903], //using coordinates of Denver, Colorado as map center on page load
+    center: [39.7392, -104.9903], //coordinates for Denver, Colorado as map center on page load
     zoom: 4,
     layers: [topo, quakes, faultLines] //showing topo map, and both earthquakes and faultlines on page load
-}); // (1)
+}); // (5)
 
 
 //Initialize layer control
-L.control.layers(baseMaps, overlayMaps, {collapsed: false}).addTo(map);//https://leafletjs.com/examples/layers-control/
+L.control.layers(baseMaps, overlayMaps, {collapsed: false}).addTo(map);//(6)
 
 
 // add legend to map using Leaflet.legend plug-in
@@ -167,4 +165,4 @@ const legend = L.control.Legend({
         fillColor: "#ff0303",
         weight: 1 
     }]
-}).addTo(map); //https://github.com/ptma/Leaflet.Legend
+}).addTo(map); //(7)
