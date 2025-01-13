@@ -10,4 +10,6 @@ The sources referenced below are linked to comments in the code, indicated by th
 
 -------------------------------------
 References:
-1) 
+1) Module 15; Lesson 1; Activity 1; logic.js
+2) https://leafletjs.com/examples/quick-start/
+3) https://github.com/ptma/Leaflet.Legend

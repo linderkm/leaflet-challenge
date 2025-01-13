@@ -8,12 +8,12 @@ const dailyEndpoint = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary
 var map = L.map("map",{
     center: [39.7392, -104.9903], //using coordinates of Denver, Colorado as map center on page load
     zoom: 5 
-}); // Module 15; Lesson 1; Activity 1; logic.js
+}); // (1)
 
 //create tile layer and assign it to map object
 var tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map); // Module 15; Lesson 1; Activity 1; logic.js
+}).addTo(map); // (1)
 
 
 // function to convert depth value from geoJSON into color code to suply to Leaflet marker builder
@@ -40,7 +40,6 @@ function depthToColor (depth) {
 };
 
 d3.json(weeklyEndpoint).then(function(response) {
-    // console.log(response.features);
 
     let features = response.features;
 
@@ -55,7 +54,7 @@ d3.json(weeklyEndpoint).then(function(response) {
             fillColor: depthToColor(depth),
             fillOpacity: 0.9,
             radius: magnitude * 10000
-        }).addTo(map).bindPopup(`Location: ${place}</b><br>Magnitude: ${magnitude}</b><br>Depth: ${depth}m`);//https://leafletjs.com/examples/quick-start/
+        }).addTo(map).bindPopup(`Location: ${place}</b><br>Magnitude: ${magnitude}</b><br>Depth: ${depth}m`); //(2)
     };
 });
 
@@ -100,7 +99,7 @@ const legend = L.control.Legend({
         fillColor: "#ff0303",
         weight: 1 
     }]
-}).addTo(map); //https://github.com/ptma/Leaflet.Legend
+}).addTo(map); //(3)
 
 
 
