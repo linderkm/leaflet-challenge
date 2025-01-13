@@ -13,7 +13,7 @@ References (PART-2):
 4) https://leafletjs.com/examples/quick-start/
 5) Module 15; Lesson 1; Activity 1; logic.js
 6) https://leafletjs.com/examples/layers-control/
-7) https://github.com/ptma/Leaflet.Legend
+7) "https://github.com/ptma/Leaflet.Legend"
 
 
 References (PART-1):
