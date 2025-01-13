@@ -66,7 +66,7 @@ d3.json(weeklyEndpoint).then(function(response) {
 
 
 // add legend to map using Leaflet.legend plug-in
-L.control.Legend({
+const legend = L.control.Legend({
     position: "bottomleft",
     collapsed: false,
     symbolWidth: 20,
