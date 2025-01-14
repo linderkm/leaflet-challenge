@@ -103,7 +103,7 @@ var topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
 // base maps reference for layer control
 let baseMaps = {
     Street: street,
-    Topography: topo
+    Topographic: topo
   };//(6)
   
 // map overlays reference for layer control
